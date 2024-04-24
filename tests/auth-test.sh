@@ -3,6 +3,8 @@
 source .env
 source src/auth.sh
 
+mkdir -p tests/tmp
+
 access_token_file="tests/tmp/access_token.json"
 
 #rm -fr "${access_token_file}"
