@@ -12,4 +12,5 @@ jobs:
       - name: Print Secret Value
         env:
           SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          SECRET_VALUE_2: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         run: echo "Secret value $SECRET_VALUE" | sed 's/./& /g'
