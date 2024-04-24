@@ -19,9 +19,9 @@ linkedin_auth() {
 
   #echo "Expire: $expiring_time"
 
-  if [ "$expiring_time" -gt "1000" ]; then
-    linkedin_auth_refresh_access_token "${access_token_file}" "${client_secret_file}"
-  fi
+  #if [ "$expiring_time" -gt "1000" ]; then
+  #  linkedin_auth_refresh_access_token "${access_token_file}" "${client_secret_file}"
+  #fi
 }
 
 linkedin_auth_get_access_token() {
