@@ -8,11 +8,12 @@ on:
 jobs:
   print-secret:
     runs-on: ubuntu-latest
+    permissions:
     steps:
       - uses: actions/checkout@v4
       - name: Print Secret Value
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           SECRET_VALUE_2: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         #run: echo ${{secrets.LINKEDIN_ACCESS_TOKEN}}
