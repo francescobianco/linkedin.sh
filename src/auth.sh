@@ -13,13 +13,11 @@ linkedin_auth() {
     linkedin_auth_get_access_token "${access_token_file}" "${client_id}" "${client_secret}"
   fi
 
-  exit
-
-  last_modified=$(google_calendar_script_file_timestamp "${access_token_file}")
+  last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
   current_time=$(date +%s)
   expiring_time=$((current_time - last_modified))
 
-  echo "$expiring_time"
+  echo "Expire: $expiring_time"
 
   if [ "$expiring_time" -gt "1000" ]; then
     google_calendar_script_refresh_access_token "${access_token_file}" "${client_secret_file}"

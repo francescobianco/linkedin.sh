@@ -2,6 +2,7 @@
 
 source .env
 source src/auth.sh
+source src/util.sh
 
 mkdir -p tests/tmp
 
