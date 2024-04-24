@@ -32,9 +32,9 @@ linkedin_post() {
   echo "${data}"
 
   #exit
-  curl -s -X POST 'https://api.linkedin.com/rest/posts' \
+  curl -s -X POST "https://api.linkedin.com/rest/posts" \
     -H "Authorization: Bearer ${access_token}" \
-    -H 'X-Restli-Protocol-Version: 2.0.0' \
+    -H "X-Restli-Protocol-Version: 2.0.0" \
     -H "LinkedIn-Version: 202401" \
     -H "Content-Type: application/json" \
     --data "${data}"
