@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Print Secret Value
         env:
+          GH_TOKEN: ${{ github.token }}
           SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           SECRET_VALUE_2: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
         #run: echo ${{secrets.LINKEDIN_ACCESS_TOKEN}}
