@@ -1,0 +1,15 @@
+name: Print Secret
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  print-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Secret Value
+        env:
+          SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        run: echo "Secret value $SECRET_VALUE"
