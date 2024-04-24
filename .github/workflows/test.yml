@@ -13,4 +13,5 @@ jobs:
         env:
           SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
           SECRET_VALUE_2: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-        run: echo ${{secrets.LINKEDIN_ACCESS_TOKEN}}
+        #run: echo ${{secrets.LINKEDIN_ACCESS_TOKEN}}
+        run: echo "Test" | gh variable set TEST
