@@ -13,7 +13,5 @@ jobs:
       - name: Print Secret Value
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          SECRET_VALUE: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-          SECRET_VALUE_2: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-        #run: echo ${{secrets.LINKEDIN_ACCESS_TOKEN}}
-        run: echo "Test" | gh variable set TEST
+        run: echo "${{ secrets.LINKEDIN_ACCESS_TOKEN }}" | gh variable set TEST
+
