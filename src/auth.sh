@@ -42,7 +42,7 @@ linkedin_auth_get_access_token() {
   client_secret=$3
   #state=12345678
 
-  scope="w_member_social"
+  scope="profile%20openid%20w_member_social"
   redirect_uri="http://localhost:9001/"
 
   oauth_url="https://www.linkedin.com/oauth/v2/authorization"

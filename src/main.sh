@@ -12,19 +12,23 @@ usage() {
 main() {
   local command
   local access_token_file
-  local client_secret_file
+  local client_id
+  local client_secret
   local event_state
 
   command=$1
   access_token_file="${HOME}/.linkedin/access_token.json"
-  client_secret_file="${HOME}/.linkedin/client_secret.json"
 
   case $command in
     --help|-h)
       usage
       ;;
     post)
-      google_calendar_script_auth "${access_token_file}" "${client_secret_file}"
+      linkedin_auth "${access_token_file}" "${client_id}" "${client_secret}"
+      #google_calendar_script_events "${db_file}" "${script_file}" "${access_token_file}" 1800
+      ;;
+    info)
+      linkedin_auth "${access_token_file}" "${client_id}" "${client_secret}"
       google_calendar_script_events "${db_file}" "${script_file}" "${access_token_file}" 1800
       ;;
     *)

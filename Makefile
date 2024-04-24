@@ -13,8 +13,8 @@ test:
 test-auth:
 	@bash tests/auth-test.sh
 
-test-events:
-	@bash tests/events-test.sh
+test-info:
+	@bash tests/info-test.sh
 
 test-date:
 	@bash tests/date-test.sh
