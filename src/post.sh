@@ -29,7 +29,7 @@ linkedin_post() {
     "isReshareDisabledByAuthor": false
   }'
 
-  echo "${data}"
+  #echo "${data}"
 
   #exit
   curl -s -X POST "https://api.linkedin.com/rest/posts" \
