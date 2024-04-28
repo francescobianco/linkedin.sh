@@ -1,16 +1,21 @@
 
 linkedin_auth() {
+  local client_id
+  local client_secret
+  local access_token_env
   local access_token_file
-  local client_secret_file
+  local access_token_log
   local last_modified
   local current_time
 
-  access_token_file=$1
-  client_id=$2
-  client_secret=$3
+  client_id=$1
+  client_secret=$2
+  access_token_file=$3
+  access_token_env="$4"
+  access_token_log=$4
 
   if [ ! -f "${access_token_file}" ]; then
-    linkedin_auth_get_access_token "${access_token_file}" "${client_id}" "${client_secret}"
+    linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   fi
 
   last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
