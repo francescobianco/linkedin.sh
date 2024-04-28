@@ -20,6 +20,9 @@ test-auth:
 test-access-token-log:
 	@bash tests/access-token-log-test.sh
 
+test-refresh-access-token:
+	@bash tests/refresh-access-token-test.sh
+
 test-info:
 	@bash tests/info-test.sh
 

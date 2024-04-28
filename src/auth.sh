@@ -25,7 +25,7 @@ linkedin_auth() {
   #echo "Expire: $expiring_time"
 
   #if [ "$expiring_time" -gt "1000" ]; then
-  #  linkedin_auth_refresh_access_token "${access_token_file}" "${client_secret_file}"
+  #  linkedin_auth_refresh_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   #fi
 }
 
@@ -83,14 +83,40 @@ linkedin_auth_get_access_token() {
 }
 
 linkedin_auth_refresh_access_token() {
-  local access_token_file
-  local client_secret_file
   local client_id
   local client_secret
+  local access_token_file
   local refresh_token_url
   local refresh_token
 
-  access_token_file=$1
+  echo "AA"
+
+  client_id=$1
+  client_secret=$2
+  access_token_file=$3
+
+  if [ ! -f "${access_token_file}" ]; then
+    echo "Access token file not found: ${access_token_file}"
+    exit 1
+  fi
+
+  refresh_token=$(sed -n 's/.*"refresh_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+
+  echo "Refresh token: $refresh_token"
+
+  if [ -z "${refresh_token}" ]; then
+    oauth_url="https://www.linkedin.com/oauth/v2/accessToken"
+    oauth_url="${oauth_url}?client_id=$client_id"
+    oauth_url="${oauth_url}&client_secret=$client_secret"
+    oauth_url="${oauth_url}&code=$code"
+    oauth_url="${oauth_url}&redirect_uri=$redirect_uri"
+    oauth_url="${oauth_url}&grant_type=authorization_code"
+
+    response=$(curl -s -H "Content-Type: x-www-form-urlencoded" -d "" -X POST "${oauth_url}")
+  fi
+
+  exit
+
   client_secret_file=$2
 
   refresh_token_url="https://oauth2.googleapis.com/token"
