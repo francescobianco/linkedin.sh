@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo $((${{ secrets.COUNTER }} + 1)) | gh secret set TEST
+      - run: echo $((${{ secrets.COUNTER }} + 1)) | gh secret set COUNTER
       - run: echo "${{ secrets.COUNTER }}" | gh variable set TEST
       - name: Print Secret Value
         env:
