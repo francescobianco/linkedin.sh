@@ -1,0 +1,22 @@
+name: Access Token
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  refresh_access_token:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+      LINKEDIN_ACCESS_TOKEN_LOG: .github/workflows/access_token.log
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh Access Token
+        run: ./bin/linkedin.sh refresh-access-token | gh secret set LINKEDIN_ACCESS_TOKEN
+      - name: Update Access Token Log
+        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Check Access Token Status
+        run: ./bin/linkedin.sh access-token-status

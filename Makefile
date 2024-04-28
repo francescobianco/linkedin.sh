@@ -1,4 +1,7 @@
 
+build:
+	@mush build --release
+
 push:
 	@date > tests/.last-push
 	@git add .
@@ -13,6 +16,9 @@ test:
 
 test-auth:
 	@bash tests/auth-test.sh
+
+test-access-token-log:
+	@bash tests/access-token-log-test.sh
 
 test-info:
 	@bash tests/info-test.sh
