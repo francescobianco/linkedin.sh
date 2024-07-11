@@ -3,10 +3,10 @@
 
 ### Use on GitHub Action
 
-Firstly, run on your local machine the following command to generate a token:
+Firstly, run on your local machine the following command to generate a token and store it in a GitHub secret:
 
 ```bash
-linkedin.sh github 
+linkedin.sh github <user/repo>
 ```
 
 Finally, create a GitHub Action workflow file (e.g. `.github/workflows/linkedin.yml`) with the following content:
@@ -19,7 +19,7 @@ on:
    - cron: '0 9 * * *'
 
 jobs:
-  refresh_access_token:
+  daily-post:
     runs-on: ubuntu-latest
     env:      
       LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}      

@@ -2,10 +2,10 @@ name: Daily LinkedIn Post
 
 on:
   schedule:
-    - cron: '5 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
-  refresh_access_token:
+  daily-post:
     runs-on: ubuntu-latest
     env:
       LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
