@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
-# @BP010: Release metadata
-# @package: linkedin.sh
-# @build_type: bin
-# @build_with: Mush 0.2.0 (2024-03-21)
-# @build_date: 2024-04-28T08:59:37Z
+## BP010: Release metadata
+## @build_type: bin
+## @build_date: 2024-07-11T16:59:45Z
 set -e
-use() { return 0; }
-extern() { return 0; }
-legacy() { return 0; }
-module() { return 0; }
-public() { return 0; }
-embed() { return 0; }
+extern() {
+  extern=$1
+}
+legacy() {
+  legacy=$1
+}
+module() {
+  module=$1
+}
+public() {
+  public=$1
+}
+use() {
+  use=$1
+}
+embed() {
+  embed=$1
+}
 ## BP004: Compile the entrypoint
 
 module auth
@@ -25,25 +35,31 @@ usage() {
 
 main() {
   local command
+  local access_token_env
   local access_token_file
+  local access_token_log
   local client_id
   local client_secret
-  local event_state
 
   command=$1
+  client_id="${LINKEDIN_CLIENT_ID}"
+  client_secret="${LINKEDIN_CLIENT_SECRET}"
+  access_token_env="${LINKEDIN_ACCESS_TOKEN}"
   access_token_file="${HOME}/.linkedin/access_token.json"
+  access_token_log="$${LINKEDIN_ACCESS_TOKEN_LOG}"
 
   case $command in
     --help|-h)
       usage
       ;;
     post)
-      linkedin_auth "${access_token_file}" "${client_id}" "${client_secret}"
-      #google_calendar_script_events "${db_file}" "${script_file}" "${access_token_file}" 1800
+      linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token_env}" "${access_token_log}"
       ;;
     info)
-      linkedin_auth "${access_token_file}" "${client_id}" "${client_secret}"
-      google_calendar_script_events "${db_file}" "${script_file}" "${access_token_file}" 1800
+      linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token_env}" "${access_token_log}"
+      ;;
+    refresh-access-token)
+      linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token_env}" "${access_token_log}"
       ;;
     *)
       usage
@@ -52,17 +68,22 @@ main() {
 }
 
 linkedin_auth() {
+  local client_id
+  local client_secret
+  local access_token_env
   local access_token_file
-  local client_secret_file
+  local access_token_log
   local last_modified
   local current_time
 
-  access_token_file=$1
-  client_id=$2
-  client_secret=$3
+  client_id=$1
+  client_secret=$2
+  access_token_file=$3
+  access_token_env="$4"
+  access_token_log=$4
 
   if [ ! -f "${access_token_file}" ]; then
-    linkedin_auth_get_access_token "${access_token_file}" "${client_id}" "${client_secret}"
+    linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   fi
 
   last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
@@ -72,7 +93,7 @@ linkedin_auth() {
   #echo "Expire: $expiring_time"
 
   #if [ "$expiring_time" -gt "1000" ]; then
-  #  linkedin_auth_refresh_access_token "${access_token_file}" "${client_secret_file}"
+  #  linkedin_auth_refresh_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   #fi
 }
 
@@ -130,14 +151,40 @@ linkedin_auth_get_access_token() {
 }
 
 linkedin_auth_refresh_access_token() {
-  local access_token_file
-  local client_secret_file
   local client_id
   local client_secret
+  local access_token_file
   local refresh_token_url
   local refresh_token
 
-  access_token_file=$1
+  echo "AA"
+
+  client_id=$1
+  client_secret=$2
+  access_token_file=$3
+
+  if [ ! -f "${access_token_file}" ]; then
+    echo "Access token file not found: ${access_token_file}"
+    exit 1
+  fi
+
+  refresh_token=$(sed -n 's/.*"refresh_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+
+  echo "Refresh token: $refresh_token"
+
+  if [ -z "${refresh_token}" ]; then
+    oauth_url="https://www.linkedin.com/oauth/v2/accessToken"
+    oauth_url="${oauth_url}?client_id=$client_id"
+    oauth_url="${oauth_url}&client_secret=$client_secret"
+    oauth_url="${oauth_url}&code=$code"
+    oauth_url="${oauth_url}&redirect_uri=$redirect_uri"
+    oauth_url="${oauth_url}&grant_type=authorization_code"
+
+    response=$(curl -s -H "Content-Type: x-www-form-urlencoded" -d "" -X POST "${oauth_url}")
+  fi
+
+  exit
+
   client_secret_file=$2
 
   refresh_token_url="https://oauth2.googleapis.com/token"

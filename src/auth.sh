@@ -2,7 +2,7 @@
 linkedin_auth() {
   local client_id
   local client_secret
-  local access_token_env
+  local access_token
   local access_token_file
   local access_token_log
   local last_modified
@@ -11,8 +11,17 @@ linkedin_auth() {
   client_id=$1
   client_secret=$2
   access_token_file=$3
-  access_token_env="$4"
-  access_token_log=$4
+  access_token="$4"
+
+  if [ -z "${client_id}" ]; then
+    echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
+    exit 1
+  fi
+
+  if [ -z "${client_secret}" ]; then
+    echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
+    exit 1
+  fi
 
   if [ ! -f "${access_token_file}" ]; then
     linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"

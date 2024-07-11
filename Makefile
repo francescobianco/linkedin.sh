@@ -1,4 +1,7 @@
 
+install: build
+	@mush install --path .
+
 build:
 	@mush build --release
 

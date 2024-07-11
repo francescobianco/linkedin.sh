@@ -7,7 +7,21 @@ linkedin_post() {
   local data
 
   access_token_file=$1
-  access_token=$(sed -n 's/.*"access_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+  access_token=$2
+
+  if [ -z "${access_token}" ]; then
+    if [ ! -f "${access_token_file}" ]; then
+      echo "Access token file not found: ${access_token_file}"
+      exit 1
+    fi
+    access_token=$(sed -n 's/.*"access_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+  fi
+
+  if [ -z "${access_token}" ]; then
+    echo "Access token not found, please authenticate first."
+    exit 1
+  fi
+
   userinfo=$(curl -s -X GET -H "Authorization: Bearer ${access_token}" "https://api.linkedin.com/v2/userinfo")
   sub=$(echo "${userinfo}" | sed -n 's/.*"sub": *"\(.*\)".*/\1/p' | cut -d '"' -f 1)
 
