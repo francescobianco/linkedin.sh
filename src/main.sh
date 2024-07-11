@@ -1,5 +1,6 @@
 
 module auth
+module github
 module util
 
 usage() {
@@ -36,6 +37,10 @@ main() {
       ;;
     refresh-access-token)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
+      ;;
+    github)
+      linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
+      linkedin_github "${access_token_file}" "${access_token}"
       ;;
     *)
       usage

@@ -27,21 +27,19 @@ linkedin_auth() {
     linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   fi
 
-  last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
-  current_time=$(date +%s)
-  expiring_time=$((current_time - last_modified))
-
+  #last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
+  #current_time=$(date +%s)
+  #expiring_time=$((current_time - last_modified))
   #echo "Expire: $expiring_time"
-
   #if [ "$expiring_time" -gt "1000" ]; then
   #  linkedin_auth_refresh_access_token "${client_id}" "${client_secret}" "${access_token_file}"
   #fi
 }
 
 linkedin_auth_get_access_token() {
-  local access_token_file
   local client_id
   local client_secret
+  local access_token_file
   local scope
   local redirect_uri
   local oauth_url
@@ -51,9 +49,9 @@ linkedin_auth_get_access_token() {
   local code
   local state
 
-  access_token_file=$1
-  client_id=$2
-  client_secret=$3
+  client_id=$1
+  client_secret=$2
+  access_token_file=$3
   #state=12345678
 
   scope="profile%20openid%20w_member_social"
@@ -88,6 +86,9 @@ linkedin_auth_get_access_token() {
 
   echo
   echo "Authorization complete. Access token saved to '${access_token_file}'"
+
+  mkdir -p "$(dirname "${access_token_file}")"
+
   echo "${response}" > "${access_token_file}"
 }
 
@@ -145,4 +146,40 @@ linkedin_auth_refresh_access_token() {
   echo "Access token refreshed: $access_token"
 
   echo "${access_token}" > "${access_token_file}"
+}
+
+linkedin_auth_check() {
+  local access_token_file
+  local access_token
+
+  access_token_file=$1
+  access_token=$2
+
+  if [ -z "${access_token}" ]; then
+    if [ ! -f "${access_token_file}" ]; then
+      echo "Access token file not found: ${access_token_file}"
+      exit 1
+    fi
+    access_token=$(sed -n 's/.*"access_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+    ## TODO: Check if access token is valid or expired
+  fi
+
+  if [ -z "${access_token}" ]; then
+    echo "Access token not found, please authenticate first."
+    exit 1
+  fi
+}
+
+linkedin_auth_select_access_token() {
+  local access_token_file
+  local access_token
+
+  access_token_file=$1
+  access_token=$2
+
+  if [ -z "${access_token}" ]; then
+    access_token=$(sed -n 's/.*"access_token": *"\(.*\)".*/\1/p' "${access_token_file}" | cut -d '"' -f 1)
+  fi
+
+  echo "${access_token}"
 }

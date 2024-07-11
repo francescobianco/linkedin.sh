@@ -31,3 +31,6 @@ test-info:
 
 test-post:
 	@bash tests/post-test.sh
+
+test-github:
+	@bash tests/github-test.sh
