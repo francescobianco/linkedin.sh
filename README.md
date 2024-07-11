@@ -1,6 +1,5 @@
 # linkedin.sh
 
-
 ### Use on GitHub Action
 
 Firstly, run on your local machine the following command to generate a token and store it in a GitHub secret:
@@ -17,6 +16,7 @@ name: Daily LinkedIn Post
 on:
   schedule:
    - cron: '0 9 * * *'
+  workflow_dispatch:
 
 jobs:
   daily-post:
