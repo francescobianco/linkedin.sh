@@ -11,6 +11,8 @@ push:
 	@git commit -am "New release!" || true
 	@git push
 
+release: build push
+
 pull:
 	@git pull
 
