@@ -1,6 +1,7 @@
 
 module auth
 module github
+module post
 module util
 
 usage() {

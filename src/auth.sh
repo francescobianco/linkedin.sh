@@ -13,19 +13,23 @@ linkedin_auth() {
   access_token_file=$3
   access_token="$4"
 
-  if [ -z "${client_id}" ]; then
-    echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
-    exit 1
+  if [ -z "${access_token}" ]; then
+    if [ -z "${client_id}" ]; then
+      echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
+      exit 1
+    fi
+
+    if [ -z "${client_secret}" ]; then
+      echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
+      exit 1
+    fi
+
+    if [ ! -f "${access_token_file}" ]; then
+      linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"
+    fi
   fi
 
-  if [ -z "${client_secret}" ]; then
-    echo "Client ID not set, use 'LINKEDIN_CLIENT_ID' environment variable."
-    exit 1
-  fi
-
-  if [ ! -f "${access_token_file}" ]; then
-    linkedin_auth_get_access_token "${client_id}" "${client_secret}" "${access_token_file}"
-  fi
+  linkedin_auth_check "${access_token_file}" "${access_token}"
 
   #last_modified=$(linkedin_get_file_timestamp "${access_token_file}")
   #current_time=$(date +%s)
@@ -48,6 +52,7 @@ linkedin_auth_get_access_token() {
   local request
   local code
   local state
+  local options
 
   client_id=$1
   client_secret=$2
@@ -68,10 +73,12 @@ linkedin_auth_get_access_token() {
   echo
   echo "$oauth_url"
 
-  message="<script>alert('Authorization complete. You may close this window, then go back to the terminal.');location.reload();</script>"
+  message="<script>fetch(location.href);alert('Authorization complete. You may close this window, then go back to the terminal.');location.reload();</script>"
   response="HTTP/1.1 200 OK\r\nContent-Length: ${#message}\r\n\r\n${message}"
 
-  request=$(echo -ne "${response}" | nc -N -l -p 9001 | sed -n 's/GET \([^ ]*\).*/\1/p')
+  options="-N"
+  [ "$(uname)" = "Darwin" ] && options="-c"
+  request=$(echo -ne "${response}" | nc $options -l -p 9001 | sed -n 's/GET \([^ ]*\).*/\1/p')
 
   code=$(echo "${request}" | sed -n 's/.*\?code=\([^&]*\).*/\1/p')
 
@@ -99,8 +106,6 @@ linkedin_auth_refresh_access_token() {
   local refresh_token_url
   local refresh_token
 
-  echo "AA"
-
   client_id=$1
   client_secret=$2
   access_token_file=$3
@@ -124,8 +129,6 @@ linkedin_auth_refresh_access_token() {
 
     response=$(curl -s -H "Content-Type: x-www-form-urlencoded" -d "" -X POST "${oauth_url}")
   fi
-
-  exit
 
   client_secret_file=$2
 
