@@ -3,7 +3,7 @@
 # @package: linkedin.sh
 # @build_type: bin
 # @build_with: Mush 0.2.0 (2024-03-21)
-# @build_date: 2024-07-12T01:47:31Z
+# @build_date: 2024-07-12T01:49:35Z
 set -e
 use() { return 0; }
 extern() { return 0; }
@@ -57,7 +57,7 @@ main() {
       ;;
     github)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
-      linkedin_github "${access_token_file}" "${access_token}"
+      linkedin_github "${access_token_file}" "${access_token}" "$2"
       ;;
     *)
       usage

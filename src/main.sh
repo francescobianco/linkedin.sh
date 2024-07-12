@@ -43,7 +43,7 @@ main() {
       ;;
     github)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
-      linkedin_github "${access_token_file}" "${access_token}"
+      linkedin_github "${access_token_file}" "${access_token}" "$2"
       ;;
     *)
       usage
