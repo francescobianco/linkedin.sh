@@ -1,6 +1,7 @@
 
 module auth
 module github
+module info
 module post
 module util
 
@@ -35,6 +36,7 @@ main() {
       ;;
     info)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
+      linkedin_info "${access_token_file}" "${access_token}"
       ;;
     refresh-access-token)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"

@@ -10,8 +10,6 @@ linkedin_post() {
   access_token=$2
   post_file=$3
 
-  linkedin_auth_check "${access_token_file}" "${access_token}"
-
   if [ ! -f "${post_file}" ]; then
     echo "Post file not found: $post_file"
     exit 1

@@ -2,7 +2,7 @@ name: Daily LinkedIn Post
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -19,4 +19,4 @@ jobs:
           chmod +x ./bin/linkedin.sh 
 
       - name: New LinkedIn Post
-        run: ./bin/linkedin.sh post my_post.txt
+        run: ./bin/linkedin.sh info

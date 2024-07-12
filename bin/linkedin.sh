@@ -3,7 +3,7 @@
 # @package: linkedin.sh
 # @build_type: bin
 # @build_with: Mush 0.2.0 (2024-03-21)
-# @build_date: 2024-07-12T01:19:29Z
+# @build_date: 2024-07-12T01:36:15Z
 set -e
 use() { return 0; }
 extern() { return 0; }
@@ -15,6 +15,7 @@ embed() { return 0; }
 
 module auth
 module github
+module info
 module post
 module util
 
@@ -49,6 +50,7 @@ main() {
       ;;
     info)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
+      linkedin_info "${access_token_file}" "${access_token}"
       ;;
     refresh-access-token)
       linkedin_auth "${client_id}" "${client_secret}" "${access_token_file}" "${access_token}"
@@ -265,7 +267,7 @@ linkedin_github() {
   echo "${access_token}" | gh secret set LINEKDIN_ACCESS_TOKEN -R francescobianco/linkedin.sh
 }
 
-linkedin_post() {
+linkedin_info() {
   local access_token_file
   local access_token
   local userinfo
@@ -276,7 +278,28 @@ linkedin_post() {
   access_token=$2
   post_file=$3
 
-  linkedin_auth_check "${access_token_file}" "${access_token}"
+  access_token=$(linkedin_auth_select_access_token "${access_token_file}" "${access_token}")
+  userinfo=$(curl -s -X GET -H "Authorization: Bearer ${access_token}" "https://api.linkedin.com/v2/userinfo")
+  name=$(echo "${userinfo}" | sed -n 's/.*"name": *"\(.*\)".*/\1/p' | cut -d '"' -f 1)
+  sub=$(echo "${userinfo}" | sed -n 's/.*"sub": *"\(.*\)".*/\1/p' | cut -d '"' -f 1)
+
+  echo "  Name: ${name}"
+  echo "   Sub: ${sub}"
+  if [ -f "$access_token_file" ]; then
+    echo " Token: ${access_token_file}"
+  fi
+}
+
+linkedin_post() {
+  local access_token_file
+  local access_token
+  local userinfo
+  local post_file
+  local data
+
+  access_token_file=$1
+  access_token=$2
+  post_file=$3
 
   if [ ! -f "${post_file}" ]; then
     echo "Post file not found: $post_file"
