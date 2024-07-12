@@ -5,10 +5,9 @@ linkedin_github() {
 
   access_token_file="${1}"
   access_token="${2}"
-
-  linkedin_auth_check "${access_token_file}" "${access_token}"
+  repository="${3}"
 
   access_token=$(linkedin_auth_select_access_token "${access_token_file}" "${access_token}")
 
-  echo "${access_token}" | gh secret set LINEKDIN_ACCESS_TOKEN -R francescobianco/linkedin.sh
+  echo "${access_token}" | gh secret set LINKEDIN_ACCESS_TOKEN -R "${repository}"
 }

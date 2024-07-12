@@ -3,7 +3,7 @@
 # @package: linkedin.sh
 # @build_type: bin
 # @build_with: Mush 0.2.0 (2024-03-21)
-# @build_date: 2024-07-12T01:36:15Z
+# @build_date: 2024-07-12T01:47:31Z
 set -e
 use() { return 0; }
 extern() { return 0; }
@@ -259,12 +259,11 @@ linkedin_github() {
 
   access_token_file="${1}"
   access_token="${2}"
-
-  linkedin_auth_check "${access_token_file}" "${access_token}"
+  repository="${3}"
 
   access_token=$(linkedin_auth_select_access_token "${access_token_file}" "${access_token}")
 
-  echo "${access_token}" | gh secret set LINEKDIN_ACCESS_TOKEN -R francescobianco/linkedin.sh
+  echo "${access_token}" | gh secret set LINKEDIN_ACCESS_TOKEN -R "${repository}"
 }
 
 linkedin_info() {
