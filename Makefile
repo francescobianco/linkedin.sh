@@ -36,3 +36,6 @@ test-post:
 
 test-github:
 	@bash tests/github-test.sh
+
+test-group:
+	@bash tests/group-test.sh
